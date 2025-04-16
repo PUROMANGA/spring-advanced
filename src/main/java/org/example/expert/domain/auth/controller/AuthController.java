@@ -1,5 +1,6 @@
 package org.example.expert.domain.auth.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.expert.domain.auth.dto.request.SigninRequest;
@@ -23,7 +24,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth/signin")
-    public SigninResponse signin(@Valid @RequestBody SigninRequest signinRequest) {
+    public SigninResponse signin(@Valid @RequestBody SigninRequest signinRequest, HttpServletRequest request) {
         return authService.signin(signinRequest);
     }
 }

@@ -11,13 +11,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.expert.domain.user.enums.UserRole;
+import org.springframework.web.util.ContentCachingRequestWrapper;
+import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor
 public class JwtFilter implements Filter {
-
     private final JwtUtil jwtUtil;
 
     @Override
@@ -27,8 +28,12 @@ public class JwtFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+        ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper(httpRequest);
+        ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(httpResponse);
 
         String url = httpRequest.getRequestURI();
 
@@ -71,7 +76,7 @@ public class JwtFilter implements Filter {
                 return;
             }
 
-            chain.doFilter(request, response);
+            chain.doFilter(requestWrapper, responseWrapper);
         } catch (SecurityException | MalformedJwtException e) {
             log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.", e);
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "유효하지 않는 JWT 서명입니다.");
