@@ -23,7 +23,7 @@ public class LogingAop {
     public void commentControllerMethod() {
     }
 
-    @Pointcut("org.example.expert.domain.user.controller*(..))")
+    @Pointcut("execution(* org.example.expert.domain.user.controller..*(..))")
     public void userControllerMethod() {
     }
 
